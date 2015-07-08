@@ -18,7 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
-	private static final String HELLO_WORLD = "Hello World!!";
+	private static final String HELLO_WORLD = "Hello World!";
 
 	@Rule
 	public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
