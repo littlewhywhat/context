@@ -2,6 +2,8 @@ package com.littlewhywhat.context.android.ui;
 
 import com.littlewhywhat.context.android.R;
 
+import com.littlewhywhat.context.android.data.Data;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +14,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private static final String HELLO_WORLD = "Hello World!";
-	private static final String[] texts = new String[] {"sun","grass","sky"};
+	private Data data;
 	private ArrayAdapter<String> adapter;
 
 	@Override
@@ -20,15 +22,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);
 		getHello().setText(HELLO_WORLD);
+		data = new Data();
 		adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.itemText);
 		getListView().setAdapter(adapter);
 		getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				getHello().setText(String.valueOf(id));
+				swapArray(data.getChildren(id));
 			}
 		});
-		swapArray(texts);
+		swapArray(data.getRoot());
 	}
 
 	private void swapArray(String[] array) {
