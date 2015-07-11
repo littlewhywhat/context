@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	private static final String HELLO_WORLD = "Hello World!";
 	private Data data;
 	private ArrayAdapter<String> adapter;
 
@@ -22,15 +21,24 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);
-		getHello().setText(HELLO_WORLD);
 		data = new Data();
 		adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.itemText);
+		getTitleView().setText(Data.ROOT_ID);
+		getTitleView().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				final String stringId = ((TextView)view).getText().toString();
+				final String parentId = data.getParent(stringId);
+				getTitleView().setText(parentId);
+				swapArray(data.getChildren(parentId));
+			}
+		});
 		getListView().setAdapter(adapter);
 		getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				final String stringId = ((TextView)((ViewGroup)view).getChildAt(0)).getText().toString();
-				getHello().setText(stringId);
+				getTitleView().setText(stringId);
 				swapArray(data.getChildren(stringId));
 			}
 		});
@@ -46,7 +54,7 @@ public class MainActivity extends Activity {
 		return (ListView)findViewById(R.id.list);
 	}
 
-	private TextView getHello() {
-		return (TextView)findViewById(R.id.hello);
+	private TextView getTitleView() {
+		return (TextView)findViewById(R.id.title);
 	}
 }
