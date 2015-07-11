@@ -24,52 +24,45 @@ public class MainActivity extends Activity {
 		this.setContentView(R.layout.main);
 		data = new Data();
 		adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.itemText);
-		getTitleView().setText(Data.ROOT_ID);
-		getTitleView().setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				final String stringId = ((TextView)view).getText().toString();
-				final String parentId = data.getParent(stringId);
-				getTitleView().setText(parentId);
-				setContextButton();
-				swapArray(data.getChildren(parentId));
-			}
-		});
 		getListView().setAdapter(adapter);
 		getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				final String stringId = ((TextView)((ViewGroup)view).getChildAt(0)).getText().toString();
-				getTitleView().setText(stringId);
-				setContextButton();
-				swapArray(data.getChildren(stringId));
+				refresh(stringId);
 			}
 		});
 		getContextButton().setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				final String stringId = getTitleView().getText().toString();
-				final String contextId = data.getContext(stringId);
-				getTitleView().setText(contextId);
-				setContextButton();
-				swapArray(data.getChildren(contextId));
+				final String contextId = data.getClonesId(stringId);
+				refresh(contextId);
 			}
 		});
-		setContextButton();
-		swapArray(data.getRoot());
-	}
-
-	private void setContextButton() {
-		final String stringId = getTitleView().getText().toString();
-		if (data.getContext(stringId) != null) 
-			getContextButton().setEnabled(true);
-		else
-			getContextButton().setEnabled(false);
+		getTitleView().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				final String stringId = ((TextView)view).getText().toString();
+				final String parentId = data.getParent(stringId);
+				refresh(parentId);
+			}
+		});
+		refresh(Data.ROOT_ID);
 	}
 
 	private void swapArray(String[] array) {
 		adapter.clear();
 		adapter.addAll(array);
+	}
+
+	private void refresh(String id) {
+		getTitleView().setText(id);
+		if (data.getClonesId(id) != null) 
+			getContextButton().setEnabled(true);
+		else
+			getContextButton().setEnabled(false);
+		swapArray(data.getChildren(id));
 	}
 
 	private ListView getListView() {
